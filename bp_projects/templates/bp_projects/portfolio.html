@@ -2,6 +2,21 @@
 {% extends "layouts/project.html" %}
 
 <!-- Setting up variables to customize "project" details to be specific to index page -->
-{% set project = "ImportantProject1" %}
+{% set project = "Improving the Hydrologic Cyle" %}
 {% set overview = "https://nighthawkcodingsociety.com/projectsearch/details/Flask%20Portfolio%20Starter" %}
 {% set repo = "https://github.com/nighthawkcoders/flask_portfolio/" %}
+{% block background %}
+    <script src="{{ url_for('static', filename='js/three.r119.min.js') }}"></script>
+    <img class="card-img-top" src="{{ url_for('static', filename='assets/hydrologicycleimage.PNG') }}" alt="Backend and Persistence" height="750">
+    <script src="{{ url_for('static', filename='js/vanta.halo.min.js') }}"></script>
+    <script>
+        VANTA.HALO({
+            el: "body",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00
+        })
+    </script>
+{% endblock %}

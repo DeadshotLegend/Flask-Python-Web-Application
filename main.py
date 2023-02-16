@@ -8,9 +8,11 @@ from model.snake import initGamers
 
 # setup APIs
 from api.snake import snake_api # Blueprint import api definition
+from api.score import score_api # Blueprint import api definition
 
 # register URIs
 app.register_blueprint(snake_api) # register app pages
+app.register_blueprint(score_api) # register app pages
 
 
 @app.errorhandler(404)  # catch for URL not found

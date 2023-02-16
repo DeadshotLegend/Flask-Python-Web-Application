@@ -23,7 +23,7 @@ class ScoreAPI:
                 return {'message': f'Score is missing'}, 210
             # validate uid
             uid = body.get('uid')
-            if uid is None or len(uid) < 1:
+            if uid is None:
                 return {'message': f'User ID is missing'}, 210
            
             so = Score(score=score, 

@@ -27,7 +27,7 @@ class ScoreAPI:
                 return {'message': f'User ID is missing'}, 210
            
             so = Score(score=score, 
-                      uid=uid)
+                      id=uid)
             
             # create score in database
             scoreObj = so.create()

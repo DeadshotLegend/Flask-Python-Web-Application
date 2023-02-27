@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource # used for REST API building
 from datetime import datetime
-
+from sqlalchemy import desc 
 from model.snake import Score
 
 score_api = Blueprint('score_api', __name__,
@@ -39,7 +39,7 @@ class ScoreAPI:
 
     class _Read(Resource):
         def get(self):
-            scores = Score.query.all()    # read/extract all users from database
+            scores = Score.query.all().order_by(desc(Score.score))    # read/extract all users from database
             json_ready = [score.read() for score in scores]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
 

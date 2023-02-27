@@ -59,6 +59,28 @@ class UserAPI:
             json_ready = [user.read() for user in users]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
 
+    class _Delete(Resource):
+        def delete(self):
+            gamerid = request.args.get("id")
+            print(gamerid)
+
+            if gamerid == "":
+                 return {'message': f'NFL Team ID not provided.'}, 210
+            else:
+                gamer = User.getUserById(gamerid)
+
+                if (gamer is None):
+                    return {'message': f'Gamer with ID: ('+gamerid+') not found.'}, 210
+                
+                gamerName = gamer._name
+                print("deleting gamer " + gamerName)
+                
+                #json_ready = [team.read()]
+                User.delete(gamer)
+                return {'message': f'Gamer \''+gamerName+'\' ('+gamerid+') deleted.'}, 200
+            
+
     # building RESTapi endpoint
     api.add_resource(_Create, '/create')
     api.add_resource(_Read, '/')
+    api.add_resource(_Delete, '/delete')

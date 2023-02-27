@@ -184,7 +184,9 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
         return None
-
+    
+    def getUserById(userid):
+        return db.session.query(User).filter(User.id == userid).first()
 
 """Database Creation and Testing """
 

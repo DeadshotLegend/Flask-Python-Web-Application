@@ -1,13 +1,12 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Api, Resource # used for REST API building
 from datetime import datetime
-
-
 from model.snake import User
 
 snake_api = Blueprint('snake_api', __name__,
                    url_prefix='/api/gamers')
 
+# add cors headers
 @snake_api.after_request 
 def after_request(response):
     header = response.headers
@@ -20,8 +19,11 @@ def after_request(response):
 # API docs https://flask-restful.readthedocs.io/en/latest/api.html
 api = Api(snake_api)
 
-class UserAPI:        
+# implement gamer / user api
+class UserAPI:
+    # create gamer
     class _Create(Resource):
+        # post implementation
         def post(self):
             ''' Read data for json body '''
             print(request.get_data())
@@ -71,7 +73,9 @@ class UserAPI:
             # failure returns error
             return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 210
 
+    # update user / gamer
     class _Update(Resource):
+        # put implementation
         def put(self):
             ''' Read data for json body '''
             print(request.get_data())
@@ -127,11 +131,15 @@ class UserAPI:
             # failure returns error
             return {'message': f'Processed {name}, either a format error or User ID {gamerid} is incorrect'}, 210
 
+    # get users
     class _Read(Resource):
+        # get implementation
         def get(self):
             gamerid = request.args.get("id")
             print(gamerid)
 
+            # if id is present in the request params, then read that user's data
+            # otherwise read all userss
             if gamerid is None or len(gamerid) == 0:
                 users = User.query.all()    # read/extract all users from database
                 json_ready = [user.read() for user in users]  # prepare output in json
@@ -140,8 +148,9 @@ class UserAPI:
                 gamer = User.getUserById(gamerid)
                 return jsonify(gamer.read()) 
             
-
+    # get users' scores
     class _Scores(Resource):
+        # get implementation
         def get(self):
             scoresData = User.getAllScores()  # read/extract all users from database
             scores = []
@@ -149,10 +158,10 @@ class UserAPI:
                 #print ("Name: {} Score: {} Date Played: {}".format(user._name,str(score.score), score.dateplayed))
                 sc = {"name": user._name, "score":str(score.score), "dateplayed": score.dateplayed.strftime('%Y-%m-%d')}
                 scores.append(sc)
-            #json_ready = [user, score for user, score in scores]  # prepare output in json
-            #print(scores)
+            
             return jsonify(scores)  # jsonify creates Flask response object, more specific to APIs than json.dumps
-        
+
+    # login implementation
     class _Login(Resource):
         def get(self):
             gamerid = request.args.get("uid")
@@ -178,6 +187,7 @@ class UserAPI:
                 else:
                     return {'valid':False, 'message': f'Authentication failed for gamer with ID: ('+gamerid+'). Incorrect password.'}, 210
 
+    # delete users 
     class _Delete(Resource):
         def delete(self):
             gamerid = request.args.get("id")

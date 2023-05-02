@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Api, Resource # used for REST API building
 from datetime import datetime
-
-
 from model.snake import AdminUser
 
+# create admin api blueprint url prefix
 admin_api = Blueprint('admin_api', __name__,
                    url_prefix='/api/admin')
 
+# add cors headers
 @admin_api.after_request 
 def after_request(response):
     header = response.headers
@@ -20,8 +20,11 @@ def after_request(response):
 # API docs https://flask-restful.readthedocs.io/en/latest/api.html
 api = Api(admin_api)
 
-class AdminUserAPI:        
+# admin user api class
+class AdminUserAPI:
+    # Create (POST)  
     class _Create(Resource):
+        # post method implementation
         def post(self):
             ''' Read data for json body '''
             print(request.get_data())
@@ -63,7 +66,9 @@ class AdminUserAPI:
             # failure returns error
             return {'message': f'Processed {name}, either a format error or AdminUser ID {uid} is duplicate'}, 210
 
+    # Update (Put)
     class _Update(Resource):
+        # put implementation
         def put(self):
             ''' Read data for json body '''
             print(request.get_data())
@@ -109,20 +114,22 @@ class AdminUserAPI:
             # failure returns error
             return {'message': f'Processed {name}, either a format error or AdminUser ID {adminUserId} is incorrect'}, 210
 
+    # read (GET)
     class _Read(Resource):
+        # get implementation
         def get(self):
             users = AdminUser.query.all()    # read/extract all users from database
             json_ready = [adminUser.read() for adminUser in users]  # prepare output in json
             return jsonify(json_ready)  # jsonify creates Flask response object, more specific to APIs than json.dumps
 
-       
+    # login (get) implementation
     class _Login(Resource):
+        # creates a login implementation and does password authentication
         def get(self):
             adminUserId = request.args.get("uid")
             plainTxtPass = request.args.get("password")
             print("Authenticating AdminUser id: " + adminUserId)
             print("Authenticating password : " + plainTxtPass)
-            
 
             if adminUserId == "":
                  return {'valid':False, 'message': f'adminUser ID not provided.'}, 210
@@ -137,7 +144,9 @@ class AdminUserAPI:
                 else:
                     return {'valid':False, 'message': f'Authentication failed for Admin User with ID: ('+adminUserId+'). Incorrect password.'}, 210
 
+    # delete 
     class _Delete(Resource):
+        # delete implementation
         def delete(self):
             adminUserId = request.args.get("id")
             print(adminUserId)
@@ -153,7 +162,7 @@ class AdminUserAPI:
                 adminUserName = adminUser._name
                 print("deleting adminUser " + adminUserName)
                 
-                #json_ready = [team.read()]
+                
                 AdminUser.delete(adminUser)
                 return {'message': f'Admin User \''+adminUserName+'\' ('+adminUserId+') deleted.'}, 200
             

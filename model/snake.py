@@ -5,9 +5,6 @@ from random import randrange
 # datetime type for date of birth and date game played
 from datetime import date
 
-# not in use - 
-# import os, base64
-
 # used to load json data
 import json
 
